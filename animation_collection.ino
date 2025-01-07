@@ -1,7 +1,8 @@
 
 void Rotating_Blob() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 0.1;         // higher values = faster transitions
@@ -53,16 +54,9 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-
-  FastLED.show();
-
-  c = micros(); // for time measurement in report_performance()
-  
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
@@ -71,7 +65,8 @@ a = micros();                   // for time measurement in report_performance()
 
 void Chasing_Spirals() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 0.1;         // higher values = faster transitions
@@ -119,23 +114,17 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-
-  FastLED.show();
-
-  c = micros(); // for time measurement in report_performance()
-  
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 
 void Rings() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 1;         // higher values = faster transitions
@@ -182,22 +171,16 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-
-  FastLED.show();
-
-  c = micros(); // for time measurement in report_performance()
-  
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 void Waves() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 2;         // higher values = faster transitions
@@ -237,22 +220,16 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-
-  FastLED.show();
-
-  c = micros(); // for time measurement in report_performance()
-  
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 void Center_Field() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 1;         // higher values = faster transitions
@@ -299,22 +276,16 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-
-  FastLED.show();
-
-  c = micros(); // for time measurement in report_performance()
-  
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 void Distance_Experiment() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 0.2;         // higher values = faster transitions
@@ -360,23 +331,17 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-
-  FastLED.show();
-
-  c = micros(); // for time measurement in report_performance()
-  
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 
 void Caleido1() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.003;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
@@ -432,19 +397,16 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show();
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 void Caleido2() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.002;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
@@ -500,18 +462,15 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show();
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void Caleido3() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.004;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
@@ -577,18 +536,15 @@ a = micros();                   // for time measurement in report_performance()
 
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show();
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void Lava1() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.0015;    // speed ratios for the oscillators
   timings.ratio[0] = 4;         // higher values = faster transitions
@@ -643,19 +599,16 @@ a = micros();                   // for time measurement in report_performance()
       
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show();
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 void Scaledemo1() {
 
-a = micros();                   // for time measurement in report_performance()
+get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.00003;    // speed ratios for the oscillators
   timings.ratio[0] = 4;         // higher values = faster transitions
@@ -703,20 +656,17 @@ a = micros();                   // for time measurement in report_performance()
       
       pixel = rgb_sanity_check(pixel);
 
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 
 }
 
 
 void Yves() {
 
-  a = micros();                   // for time measurement in report_performance()
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.001;    // speed ratios for the oscillators
   timings.ratio[0] = 3;         // higher values = faster transitions
@@ -776,23 +726,20 @@ void Yves() {
       float show4          = render_value(animation);
       
      
-      pixel.red   = show3;
-      pixel.green = show3*show4/255;
-      pixel.blue  = 0;
+      pixel.green   = show3;
+      pixel.red = show3*show4/255;
+      pixel.blue  = show4/3;
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void Spiralus() {
 
-  a = micros();                   // for time measurement in report_performance()
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.0011;    // speed ratios for the oscillators
   timings.ratio[0] = 1.5;         // higher values = faster transitions
@@ -847,18 +794,15 @@ void Spiralus() {
       pixel.blue  = f*(show3-show1);
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void Spiralus2() {
 
-  a = micros();                   // for time measurement in report_performance()
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.0011;    // speed ratios for the oscillators
   timings.ratio[0] = 1.5;         // higher values = faster transitions
@@ -914,19 +858,16 @@ void Spiralus2() {
       pixel.blue  = f*(show3-show1);
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 
 void Hot_Blob() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   run_default_oscillators();
 
@@ -970,18 +911,15 @@ void Hot_Blob() { // nice one
       
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void Zoom() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   run_default_oscillators();
   timings.master_speed = 0.003;
@@ -1023,13 +961,9 @@ void Zoom() { // nice one
       
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 
@@ -1037,7 +971,8 @@ void Zoom() { // nice one
 
 void Slow_Fade() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   run_default_oscillators();
   timings.master_speed = 0.00005;
@@ -1082,18 +1017,15 @@ void Slow_Fade() { // nice one
       
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void Polar_Waves() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.5;    // master speed
 
@@ -1134,18 +1066,15 @@ void Polar_Waves() { // nice one
       
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void RGB_Blobs() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.2;    // master speed
 
@@ -1191,19 +1120,16 @@ void RGB_Blobs() { // nice one
       
       
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 
 void RGB_Blobs2() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.12;    // master speed
 
@@ -1246,18 +1172,15 @@ void RGB_Blobs2() { // nice one
       pixel.blue   = radial * (show3-show2);
      
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void RGB_Blobs3() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.12;    // master speed
 
@@ -1300,18 +1223,15 @@ void RGB_Blobs3() { // nice one
       pixel.blue   = radial * (show3+show2)*0.5 * x/15;
      
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void RGB_Blobs4() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.02;    // master speed
 
@@ -1354,18 +1274,15 @@ void RGB_Blobs4() { // nice one
       pixel.blue   = radial * (show3+show2)*0.5 * x/15;
      
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
 
 void RGB_Blobs5() { // nice one
 
-  a = micros();                   
+  get_ready();
+rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.02;    // master speed
 
@@ -1408,11 +1325,7 @@ void RGB_Blobs5() { // nice one
       pixel.blue   = radial * (show3+show2)*0.5 * x/15;
      
       pixel = rgb_sanity_check(pixel);
-      leds[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
-  b = micros(); // for time measurement in report_performance()
-  FastLED.show(); 
-  c = micros(); // for time measurement in report_performance()
-  EVERY_N_MILLIS(500) report_performance();   // check serial monitor for report
 }
