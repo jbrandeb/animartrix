@@ -56,9 +56,9 @@ struct render_parameters {
   float center_x = (num_x / 2) - 0.5;   // center of the matrix
   float center_y = (num_y / 2) - 0.5;
   float dist, angle;                
-  float scale_x = 0.3;                  // smaller values = zoom in
-  float scale_y = 0.3;
-  float scale_z = 0.3;       
+  float scale_x = 0.01;                  // smaller values = zoom in
+  float scale_y = 0.01;
+  float scale_z = 0.01;       
   float offset_x, offset_y, offset_z;     
   float z;  
   float low_limit  = 0;                 // getting contrast by highering the black point
@@ -109,6 +109,13 @@ void setup() {
   //FastLED.setMaxPowerInVoltsAndMilliamps( 5, 2000); // optional current limiting [5V, 2000mA] 
 
   Serial.begin(115200);                 // check serial monitor for current fps count
+
+
+  // Button setup
+  pinMode(27, INPUT_PULLUP);
+
+  // Proximity Sensor setup
+
  
   render_polar_lookup_table((num_x / 2) - 0.5, (num_y / 2) - 0.5);          // precalculate all polar coordinates 
                                                                             // polar origin is set to matrix centre
@@ -119,34 +126,126 @@ void setup() {
 
 //*******************************************************************************************************************
 
-void loop() {
-  
-  //RGB_Blobs5();
-  //RGB_Blobs4();
-  //RGB_Blobs3();
-  //RGB_Blobs2();
-  //RGB_Blobs();
-  //Polar_Waves();
-  //Slow_Fade();
-  //Zoom2();
-  //Zoom();
-  //Hot_Blob();
-  //Spiralus2();
-  //Spiralus();
-  Yves();
-  //Scaledemo1();
-  //Lava1();
-  //Caleido3();
-  //Caleido2();
-  //Caleido1();
-  //Distance_Experiment();
-  //Center_Field();
-  //Waves();
-  //Chasing_Spirals();
-  //Rotating_Blob();
-  //Rings();
+// Global variables (these stick around)
+int buttonState27 = LOW;
+int displayProgramNum = 1;  // start the display at this offset in the switch statement
+elapsedMillis timeElapsed;
 
-  // needed for matrix?
+// Use this function when using a temporary button
+int handleTempButton(int button)
+{
+  if (button != buttonState27) {
+      
+    buttonState27 = button;
+    Serial.print("button pin 27 pressed: ");
+    Serial.println(button);
+    
+    // This means I'm holding it down
+    if (button == LOW)
+      return 0;
+    
+    return 1;
+  }
+
+  return 0;
+}
+
+// Use this button when the button sticks a state (like the guitar buttons)
+int handleClickButton(int button)
+{
+  if (button != buttonState27) {
+    // save the button state
+    buttonState27 = button;
+    Serial.print("button pin 27 pressed: ");
+    Serial.println(buttonState27);
+
+    return 1;
+  }
+
+  return 0;
+}
+
+void loop() {
+
+  int curButtonState = digitalRead(27);
+  char incomingData = '0';
+
+  if (Serial.available() > 0) { // Check if there's any data available to read
+    incomingData = Serial.read(); // Read the incoming byte
+    Serial.print("Received: "); // Print received message
+    Serial.println(incomingData); // Print the received byte
+  }
+
+  if ((incomingData != '0') ||
+  // Jesse's buttons are Temporary High/steady Low
+      (handleTempButton(curButtonState))) {
+  //(handleClickButton(curButtonState)) {
+  //if (handleTempButton(curButtonState)) {
+  // Comment out above and uncomment below for guitar button
+  // if (handleClickButton(curButtonState)) {
+
+    // loop over all the programs, if the number included below, in the switch, changes then update this number
+    if (++displayProgramNum > 22) {
+      displayProgramNum = 0;
+    }
+    Serial.print("ProgNum: ");
+    Serial.println(displayProgramNum, DEC);
+
+  }
+
+  // press button to advance
+  switch (displayProgramNum) {
+    case 0:
+      RGB_Blobs5(); break;
+    case 1:
+      RGB_Blobs4(); break;
+    case 2:
+      RGB_Blobs3(); break;
+    case 3:
+      RGB_Blobs2(); break;
+    case 4:
+      RGB_Blobs(); break;
+    case 5:
+      Polar_Waves(); break;
+    case 6:
+      Slow_Fade(); break;
+    case 7:
+      Zoom(); break;
+    case 8:
+      Hot_Blob(); break;
+    case 9:
+      Spiralus2(); break;
+    case 10:
+      Spiralus(); break;
+    case 11:
+      Yves(); break;
+    case 12:
+      Scaledemo1(); break;
+    case 13:
+      Lava1(); break;
+    case 14:
+      Caleido3(); break;
+    case 15:
+      Caleido2(); break;
+    case 16:
+      Caleido1(); break;
+    case 17:
+      Distance_Experiment(); break;
+    case 18:
+      Center_Field(); break;
+    case 19:
+      Waves(); break;
+    case 20:
+      Chasing_Spirals(); break;
+    case 21:
+      Rotating_Blob(); break;
+    case 22:
+      Rings(); break;
+    default:
+      break;
+  } // end switch statement
+
+  // call the matrix specific draw function
   show_frame();
 } 
 

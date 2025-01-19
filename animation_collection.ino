@@ -472,7 +472,7 @@ void Caleido3() {
 get_ready();
 rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.004;    // speed ratios for the oscillators
+  timings.master_speed = 0.001;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
   timings.ratio[1] = 0.03;
   timings.ratio[2] = 0.04;
@@ -523,10 +523,10 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       float show4          = render_value(animation);
       
       // colormapping
-      float radius = 8;  // radial mask
+      float radius = 64;  // radial mask
 
       pixel.red   = show1 * (y+1) / num_y;
-      pixel.green = show3 * distance[x][y] / 10;
+      pixel.green = show3 * distance[x][y] / 20;
       pixel.blue  = (show2 + show4) / 2;
       if (distance[x][y] > radius) {
         pixel.red = 0;
