@@ -113,6 +113,7 @@ void setup() {
 
   // Button setup
   pinMode(27, INPUT_PULLUP);
+  pinMode(28, INPUT_PULLUP);
 
   // Proximity Sensor setup
 
@@ -128,6 +129,7 @@ void setup() {
 
 // Global variables (these stick around)
 int buttonState27 = LOW;
+int buttonState28 = LOW;
 int displayProgramNum = 1;  // start the display at this offset in the switch statement
 elapsedMillis timeElapsed;
 
@@ -151,13 +153,13 @@ int handleTempButton(int button)
 }
 
 // Use this button when the button sticks a state (like the guitar buttons)
-int handleClickButton(int button)
+int handleClickButton(int button, int *buttonState)
 {
-  if (button != buttonState27) {
+  if (button != *buttonState) {
     // save the button state
-    buttonState27 = button;
-    Serial.print("button pin 27 pressed: ");
-    Serial.println(buttonState27);
+    *buttonState = button;
+    Serial.print("button click pressed: ");
+    Serial.println(button);
 
     return 1;
   }
@@ -168,6 +170,7 @@ int handleClickButton(int button)
 void loop() {
 
   int curButtonState = digitalRead(27);
+  int cur28 = digitalRead(28);
   char incomingData = '0';
 
   if (Serial.available() > 0) { // Check if there's any data available to read
@@ -178,8 +181,9 @@ void loop() {
 
   if ((incomingData != '0') ||
   // Jesse's buttons are Temporary High/steady Low
-      (handleTempButton(curButtonState))) {
-  //(handleClickButton(curButtonState)) {
+      //(handleTempButton(curButtonState))) {
+      (handleClickButton(curButtonState, &buttonState27)) ||
+      (handleClickButton(cur28, &buttonState28))) {
   //if (handleTempButton(curButtonState)) {
   // Comment out above and uncomment below for guitar button
   // if (handleClickButton(curButtonState)) {
