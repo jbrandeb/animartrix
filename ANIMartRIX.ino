@@ -27,6 +27,10 @@ License CC BY-NC 3.0
 #include <MatrixHardware_Teensy4_ShieldV5.h> // Include the hardware configuration for SmartLED Shield (V5)
 #include <SmartMatrix.h>
 #include <FastLED.h>
+// Proximity Sensor setup
+#include <Adafruit_VCNL4200.h>
+#include <Wire.h>
+//#include <Twowire.h>
 
 #define num_x  64                      // how many LEDs are in one row?
 #define num_y  128                       // how many rows?
@@ -35,7 +39,7 @@ License CC BY-NC 3.0
 #define COLOR_DEPTH 24                  // Choose the color depth used for storing pixels in the layers: 24 or 48 (24 is good for most sketches - If the sketch uses type `rgb24` directly, COLOR_DEPTH must be 24)
 const uint16_t kMatrixWidth   = num_x;  // Set to the width of your display, must be a multiple of 8
 const uint16_t kMatrixHeight  = num_y;  // Set to the height of your display
-const uint8_t  kRefreshDepth  = 36;     // Tradeoff of color quality vs refresh rate, max brightness, and RAM usage.  36 is typically good, drop down to 24 if you need to.  On Teensy, multiples of 3, up to 48: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48.  On ESP32: 24, 36, 48
+const uint8_t  kRefreshDepth  = 30;     // Tradeoff of color quality vs refresh rate, max brightness, and RAM usage.  36 is typically good, drop down to 24 if you need to.  On Teensy, multiples of 3, up to 48: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48.  On ESP32: 24, 36, 48
 const uint8_t  kDmaBufferRows = 8;      // known working: 2-4, use 2 to save RAM, more to keep from dropping frames and automatically lowering refresh rate.  (This isn't used on ESP32, leave as default)
 const uint8_t  kPanelType              = SM_PANELTYPE_HUB75_32ROW_MOD16SCAN;   // Choose the configuration that matches your panels.  See more details in MatrixCommonHub75.h and the docs: https://github.com/pixelmatix/SmartMatrix/wiki
 const uint32_t kMatrixOptions          = (SM_HUB75_OPTIONS_NONE);        // see docs for options: https://github.com/pixelmatix/SmartMatrix/wiki
@@ -93,12 +97,18 @@ struct rgb {
   float red, green, blue;
 };
 
+float show1, show2, show3, show4, show5, show6, show7, show8, show9, show0;
+
 rgb pixel;
 
+Adafruit_VCNL4200 vcnl4200;
+Adafruit_VCNL4200 vcnl4200b;
 
 
 //******************************************************************************************************************
 
+// Create a new TwoWire instance for the second sensor
+//TwoWire Wire2 = TwoWire(1);
 
 void setup() {
   
@@ -115,7 +125,43 @@ void setup() {
   pinMode(27, INPUT_PULLUP);
   pinMode(28, INPUT_PULLUP);
 
-  // Proximity Sensor setup
+  // Initialize I2C communication
+  Wire.begin();
+
+  // Initialize the second sensor on pins 16 and 17
+  Wire1.begin();
+  //Wire1.setSCL(16);
+  //Wire1.setSDA(17);
+
+  if (!vcnl4200.begin()) {
+    Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
+    while (1) {
+      delay(10);
+    }
+  }
+  Serial.println("VCNL4200 found!");
+  
+  // second i2c bus
+  if (!vcnl4200b.begin(VCNL4200_I2CADDR_DEFAULT, &Wire1)) {
+    Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
+    while (1) {
+      delay(10);
+    }
+  }
+  Serial.println("VCNL4200B found!");
+
+
+  vcnl4200.setALSshutdown(true);
+  vcnl4200.setProxShutdown(false);
+  vcnl4200.setProxHD(false);
+  vcnl4200.setProxLEDCurrent(VCNL4200_LED_I_200MA);
+  vcnl4200.setProxIntegrationTime(VCNL4200_PS_IT_8T);
+
+  vcnl4200b.setALSshutdown(true);
+  vcnl4200b.setProxShutdown(false);
+  vcnl4200b.setProxHD(false);
+  vcnl4200b.setProxLEDCurrent(VCNL4200_LED_I_200MA);
+  vcnl4200b.setProxIntegrationTime(VCNL4200_PS_IT_8T);
 
  
   render_polar_lookup_table((num_x / 2) - 0.5, (num_y / 2) - 0.5);          // precalculate all polar coordinates 
@@ -130,7 +176,7 @@ void setup() {
 // Global variables (these stick around)
 int buttonState27 = LOW;
 int buttonState28 = LOW;
-int displayProgramNum = 1;  // start the display at this offset in the switch statement
+int displayProgramNum = 22;  // start the display at this offset in the switch statement
 elapsedMillis timeElapsed;
 
 // Use this function when using a temporary button
@@ -173,6 +219,7 @@ void loop() {
   int cur28 = digitalRead(28);
   char incomingData = '0';
 
+
   if (Serial.available() > 0) { // Check if there's any data available to read
     incomingData = Serial.read(); // Read the incoming byte
     Serial.print("Received: "); // Print received message
@@ -197,10 +244,21 @@ void loop() {
 
   }
 
+  // proximity read
+  uint16_t proximity = vcnl4200.readProxData();
+  //Serial.print("Prox Data: ");
+  //Serial.println(proximity);
+
+ // proximity read
+  uint16_t proximityb = vcnl4200b.readProxData();
+  //Serial.print("Prox Data B: ");
+  //Serial.println(proximityb);
+
   // press button to advance
   switch (displayProgramNum) {
     case 0:
-      RGB_Blobs5(); break;
+      //RGB_Blobs5(); break;
+      Module_Experiment10(proximity); break;
     case 1:
       RGB_Blobs4(); break;
     case 2:

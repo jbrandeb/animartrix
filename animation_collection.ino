@@ -1329,3 +1329,154 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
     }
   }
 }
+
+float mapValue(int input) {
+  // Ensure the input value is within the expected range
+  if (input < 0) input = 1;
+  if (input > 255) input = 255;
+
+  // Map the input value to the output range
+  float output = ((float)input / 255.0) * 0.665;
+  return output;
+}
+const float changeRate = 0.02;
+
+float perma_w = 0.01;
+
+float colordodge(float &a, float&b) {  
+
+  return (a/(255.f-b)) * 255.f;
+}
+
+void Module_Experiment10(int inSpeed) { 
+  //float thisSpeed;
+
+  //thisSpeed = (float)inSpeed / 10000;
+  //thisSpeed = max(thisSpeed, 0.01);
+
+
+  get_ready();
+
+  rgb24 *buffer = backgroundLayer.backBuffer();
+
+  timings.master_speed = 0.01;    // master speed 0.031
+
+  //Serial.print("thisSpeed: ");
+  //Serial.println(thisSpeed);
+  //timings.master_speed = thisSpeed;    // master speed 0.031
+
+  //  float w = 1;
+  long inputValue = map(inSpeed, 0, 200, 0, 255); // map the value to 0-255
+
+  float target = mapValue(inputValue);
+  target = constrain(target, 0.05, 0.90);
+  perma_w += (target - perma_w) * changeRate;
+  float w = 0.031;
+  Serial.print("in: ");
+  Serial.print(inSpeed);
+  Serial.print(" perma_w: ");
+  Serial.println(perma_w);
+  //float w = 3 ;
+
+  timings.ratio[0] = 0.01;           // speed ratios for the oscillators, higher values = faster transitions
+  timings.ratio[1] = 0.011;
+  timings.ratio[2] = 0.013;
+  timings.ratio[3] = 0.33*w;
+  timings.ratio[4] = 0.36*w;            // speed ratios for the oscillators, higher values = faster transitions
+  timings.ratio[5] = 0.38*w; 
+  timings.ratio[6] = 0.0003;  // master rotation
+
+  timings.offset[0] = 0;
+  timings.offset[1] = 100;
+  timings.offset[2] = 200;
+  timings.offset[3] = 300;
+  timings.offset[4] = 400;
+  timings.offset[5] = 500;
+  timings.offset[6] = 600;
+  
+
+  calculate_oscillators(timings); 
+
+  for (int x = 0; x < num_x; x++) {
+    for (int y = 0; y < num_y; y++) {
+
+      //float s = 0.4; // scale
+      float s = perma_w; // scale
+      float r = 1.5; // scroll speed
+      //float r = perma_w;
+
+      animation.dist       = 3+distance[x][y] + 3*sinf(0.25*distance[x][y]-move.radial[3]);
+      animation.angle      = polar_theta[x][y] + move.noise_angle[0] + move.noise_angle[6];
+      animation.z          = 5;
+      animation.scale_x    = 0.1 * s;
+      animation.scale_y    = 0.1 * s;
+      animation.offset_z   = 10*move.linear[0] ;
+      animation.offset_y   = -5 * r * move.linear[0];
+      animation.offset_x   = 10;
+      animation.low_limit  = 0;
+      show1                = render_value(animation);
+
+      animation.dist       = 4+distance[x][y] + 4*sinf(0.24*distance[x][y]-move.radial[4]);
+      animation.angle      = polar_theta[x][y] + move.noise_angle[1] + move.noise_angle[6];
+      animation.z          = 5;
+      animation.scale_x    = 0.1 * s;
+      animation.scale_y    = 0.1 * s;
+      animation.offset_z   = 0.1*move.linear[1] ;
+      animation.offset_y   = -5 * r * move.linear[1];
+      animation.offset_x   = 100;
+      animation.low_limit  = 0;
+      show2                = render_value(animation);
+
+      animation.dist       = 5+distance[x][y] + 5*sinf(0.23*distance[x][y]-move.radial[5]);
+      animation.angle      = polar_theta[x][y] + move.noise_angle[2] + move.noise_angle[6];
+      animation.z          = 5;
+      animation.scale_x    = 0.1 * s;
+      animation.scale_y    = 0.1 * s;
+      animation.offset_z   = 0.1*move.linear[2] ;
+      animation.offset_y   = -5 * r * move.linear[2];
+      animation.offset_x   = 1000;
+      animation.low_limit  = 0;
+      show3                = render_value(animation);
+
+      show4 = colordodge(show1, show2);
+
+      //float rad = sinf(PI/2+distance[x][y]/14); // better radial filter?!
+
+      //byte a = elapsedMillis()/100;
+      byte b = elapsedMillis() % 5000;
+      
+      // JJJ see if we can limit color pallette
+      pixel.red    = (show1 + show2) * 0.2;
+      pixel.blue   = (show1 + show2 - (show4 * 0.1)) * 0.2;
+      pixel.green  = show3 - show1 * (0.3 * (b));
+      //pixel.blue   = (show2-show1) * 0.5;
+      
+      //CHSV(rad * ((show1 + show2) + show3), 255, 255);
+      
+      pixel = rgb_sanity_check(pixel);
+      
+      //buffer[xy(x, y)] = (rgb24)CRGB(CHSV(((a + show1 + show2) + show3 + 225), 200, 200));
+      buffer[xy(x, y)] = (rgb24)CRGB(CRGB(pixel.red, pixel.green, pixel.blue));
+      /*
+      // cool green and purple run
+ 
+      byte a = elapsedMillis()/100;
+      byte b = elapsedMillis() % 1000;
+      
+      // JJJ see if we can limit color pallette
+      pixel.red    = (show1 + show2) * 0.2;
+      pixel.blue   = (show1 + show2 - (show4 * 0.2)) * 0.2;
+      pixel.green  = show3 - show1 * 0.3;
+      //pixel.blue   = (show2-show1) * 0.5;
+      
+      //CHSV(rad * ((show1 + show2) + show3), 255, 255);
+      
+      pixel = rgb_sanity_check(pixel);
+
+      
+      //buffer[xy(x, y)] = (rgb24)CRGB(CHSV(((a + show1 + show2) + show3 + 225), 200, 200));
+      buffer[xy(x, y)] = (rgb24)CRGB(CRGB(pixel.red, pixel.
+      */ 
+    }
+  }
+}
