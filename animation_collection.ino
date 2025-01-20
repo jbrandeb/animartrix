@@ -726,10 +726,10 @@ void Yves() {
       float show4          = render_value(animation);
       
      
-      pixel.green   = show3 * 0.6 * map(proximity, 1, 350, 1.0, 0.2);
-      pixel.red     = show3 * map(proximityb, 1, 350, 0.2, 1.0);
+      pixel.green   = show3 * 1.4;
+      pixel.red     = show3 * map(proximityb * 8, 100, 12000, 0.4, 6.0);
       //pixel.red = show3*show4/255;
-      pixel.blue  = show4/3;
+      pixel.blue  = show4/3 * 1.5 * map(proximity * 10, 100, 12000, 0.8, 6.0);;
       
       pixel = rgb_sanity_check(pixel);
       buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
