@@ -123,8 +123,8 @@ void Chasing_Spirals() {
 
 void Rings() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 1;         // higher values = faster transitions
@@ -135,7 +135,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   timings.offset[2] = 200;
   timings.offset[3] = 300;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -165,9 +165,9 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       float show3          = render_value(animation);
 
       // colormapping
-      pixel.red   = show1;
-      pixel.green = show2 / 4;
-      pixel.blue  = show3 / 4;
+      pixel.red   = show1 * 1.2;
+      pixel.green = (show2 / 4) * 1.2;
+      pixel.blue  = (show3 / 4) * 1.2;
 
       pixel = rgb_sanity_check(pixel);
 
@@ -592,10 +592,10 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       float show3         = render_value(animation);
 
       // colormapping
-      float linear = (y)/(num_y-1.f);  // radial mask
+      float linear = 1; //(y)/(num_y-1.f);  // radial mask
 
       pixel.red = linear*show2;
-      pixel.green = 0.1*linear*(show2-show3);
+      //pixel.green = 0.1*linear*(show2-show3);
       
       pixel = rgb_sanity_check(pixel);
 

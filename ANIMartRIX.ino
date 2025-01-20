@@ -32,9 +32,9 @@ License CC BY-NC 3.0
 #include <Wire.h>
 //#include <Twowire.h>
 
-#define num_x  64                      // how many LEDs are in one row?
-#define num_y  128                       // how many rows?
-#define brightness 255  // please be aware that reducing brightness also reduces color resolution, use only in emergency
+#define num_x  64                       // how many LEDs are in one row?
+#define num_y  128                      // how many rows?
+#define brightness 255                 // please be aware that reducing brightness also reduces color resolution, use only in emergency
 
 #define COLOR_DEPTH 24                  // Choose the color depth used for storing pixels in the layers: 24 or 48 (24 is good for most sketches - If the sketch uses type `rgb24` directly, COLOR_DEPTH must be 24)
 const uint16_t kMatrixWidth   = num_x;  // Set to the width of your display, must be a multiple of 8
