@@ -1,8 +1,8 @@
 
 void Rotating_Blob() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 0.1;         // higher values = faster transitions
@@ -105,7 +105,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       float show3          = render_value(animation);
 
       // colormapping
-      float radius = 10;
+      float radius = 50;
       float radial_filter = (radius - distance[x][y]) / radius;
 
       pixel.red   = 3*show1 * radial_filter;
@@ -666,7 +666,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 void Yves() {
 
   get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.001;    // speed ratios for the oscillators
   timings.ratio[0] = 3;         // higher values = faster transitions
@@ -901,7 +901,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.z          = 100;
       float show4          = render_value(animation);
 
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 66;   // radius of a radial brightness filter
       float radial = (radius-animation.dist)/animation.dist;
 
       float linear = (y+1)/(num_y-1.f);
@@ -1005,7 +1005,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       
       float show3          = render_value(animation);
 
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 99;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
 
@@ -1025,7 +1025,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 void Polar_Waves() { // nice one
 
   get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.5;    // master speed
 
@@ -1057,7 +1057,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
       float show3          = render_value(animation);
 
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 150;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
       pixel.red    = radial * show1;
@@ -1199,8 +1199,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.dist       = distance[x][y] + move.noise_angle[4];
       animation.angle      = polar_theta[x][y] + move.radial[0] + move.noise_angle[0]+ move.noise_angle[3] + move.noise_angle[1];
       animation.z          = (sqrtf(animation.dist));// - 10 * move.linear[0];
-      animation.scale_x    = 0.1 ;
-      animation.scale_y    = 0.1 ;
+      animation.scale_x    = 0.001 ;
+      animation.scale_y    = 0.001 ;
       animation.offset_z   = 10;
       animation.offset_x   = 10*move.linear[0];
       float show1          = render_value(animation);
@@ -1215,7 +1215,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.offset_z   = 300;
       float show3          = render_value(animation);
       
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 66;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
       pixel.red    = radial * (show1+show3)*0.5 * animation.dist/5;
@@ -1228,12 +1228,15 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   }
 }
 
-void RGB_Blobs4() { // nice one
+void RGB_Blobs4(int inSpeed) { // nice one
 
   get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  float adjusted_speed = map((float)inSpeed, 1, 4096, 0.02, 0.100);
+  //timings.master_speed = 0.02;    // master speed
 
-  timings.master_speed = 0.02;    // master speed
+  timings.master_speed = adjusted_speed;    // master speed
+
 
   timings.ratio[0] = 0.0025;           // speed ratios for the oscillators, higher values = faster transitions
   timings.ratio[1] = 0.0027;
@@ -1250,8 +1253,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.dist       = distance[x][y] + move.noise_angle[4];
       animation.angle      = polar_theta[x][y] + move.radial[0] + move.noise_angle[0]+ move.noise_angle[3] + move.noise_angle[1];
       animation.z          = 3+sqrtf(animation.dist);
-      animation.scale_x    = 0.1;
-      animation.scale_y    = 0.1;
+      animation.scale_x    = 0.001;
+      animation.scale_y    = 0.001;
       animation.offset_z   = 10;
       animation.offset_x   = 50 * move.linear[0];
       float show1          = render_value(animation);
@@ -1266,7 +1269,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.offset_z   = 300;
       float show3          = render_value(animation);
       
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 88;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
       pixel.red    = radial * (show1+show3)*0.5 * animation.dist/5;
@@ -1317,7 +1320,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.offset_z   = 300;
       float show3          = render_value(animation);
       
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 66;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
       pixel.red    = radial * (show1+show3)*0.5 * animation.dist/5;
@@ -1369,7 +1372,7 @@ void Module_Experiment10(int inSpeed) {
   long inputValue = map(inSpeed, 0, 200, 0, 255); // map the value to 0-255
 
   float target = mapValue(inputValue);
-  target = constrain(target, 0.05, 0.90);
+  target = constrain(target, 0.15, 0.90);
   perma_w += (target - perma_w) * changeRate;
   float w = 0.031;
   Serial.print("in: ");

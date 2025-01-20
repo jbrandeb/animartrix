@@ -1,7 +1,16 @@
 
 void calculate_oscillators(oscillators &timings) {
 
-  double runtime = millis() * timings.master_speed;  // global anaimation speed
+  float prox_scaled, proxb_scaled;
+
+  float prox = min(proximity, 350.0);
+  float proxb = min(proximityb, 350.0);
+  prox = max(30, prox);
+  proxb = max(30, proxb);
+  prox_scaled =  map((float)prox,  1, 350, 1.0, 1.3);
+  proxb_scaled = map((float)proxb, 1, 350, 1.0, 1.3);
+
+  double runtime = millis() * (prox_scaled * proxb_scaled) * timings.master_speed;  // global anaimation speed
 
   for (int i = 0; i < num_oscillators; i++) {
     
