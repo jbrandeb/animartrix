@@ -65,8 +65,8 @@ void Rotating_Blob() {
 
 void Chasing_Spirals() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 0.1;         // higher values = faster transitions
@@ -77,7 +77,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   timings.offset[2] = 20;
   timings.offset[3] = 30;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -85,9 +85,9 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       // describe and render animation layers
       animation.angle      = 3 * polar_theta[x][y] +  move.radial[0] - distance[x][y]/3;
       animation.dist       = distance[x][y];
-      animation.scale_z    = 0.1;  
-      animation.scale_y    = 0.1;
-      animation.scale_x    = 0.1;
+      animation.scale_z    = 0.01;  
+      animation.scale_y    = 0.01;
+      animation.scale_x    = 0.01;
       animation.offset_x   = move.linear[0];
       animation.offset_y   = 0;
       animation.offset_z   = 0;
@@ -179,8 +179,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
 void Waves() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 2;         // higher values = faster transitions
@@ -191,7 +191,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   timings.offset[2] = 200;
   timings.offset[3] = 300;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -227,9 +227,9 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 }
 
 void Center_Field() {
-
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.01;    // speed ratios for the oscillators
   timings.ratio[0] = 1;         // higher values = faster transitions
@@ -239,8 +239,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   timings.offset[1] = 100;
   timings.offset[2] = 200;
   timings.offset[3] = 300;
-  
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -391,7 +390,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       float show4          = render_value(animation);
       
       // colormapping
-      pixel.red   = show1;
+      //pixel.red   = show1;
+      pixel.red   = show3 * distance[x][y] / 10;
       pixel.green = show3 * distance[x][y] / 10;
       pixel.blue  = (show2 + show4) / 2;
 
@@ -684,7 +684,7 @@ void Yves() {
   timings.offset[5] = 500;
   timings.offset[6] = 600;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_orig(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -726,8 +726,9 @@ void Yves() {
       float show4          = render_value(animation);
       
      
-      pixel.green   = show3;
-      pixel.red = show3*show4/255;
+      pixel.green   = show3 * 0.6 * map(proximity, 1, 350, 1.0, 0.2);
+      pixel.red     = show3 * map(proximityb, 1, 350, 0.2, 1.0);
+      //pixel.red = show3*show4/255;
       pixel.blue  = show4/3;
       
       pixel = rgb_sanity_check(pixel);
@@ -866,8 +867,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
 void Hot_Blob() { // nice one
 
-  get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready(); 
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   run_default_oscillators();
 
@@ -1129,9 +1130,9 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 void RGB_Blobs2() { // nice one
 
   get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.12;    // master speed
+  timings.master_speed = 0.02;    // master speed
 
   timings.ratio[0] = 0.0025;           // speed ratios for the oscillators, higher values = faster transitions
   timings.ratio[1] = 0.0027;
@@ -1148,8 +1149,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.dist       = distance[x][y];
       animation.angle      = polar_theta[x][y] + move.radial[0] + move.noise_angle[0]+ move.noise_angle[3] + move.noise_angle[1];
       animation.z          = (sqrtf(animation.dist));// - 10 * move.linear[0];
-      animation.scale_x    = 0.1;
-      animation.scale_y    = 0.1;
+      animation.scale_x    = 0.01; // we like x 0.1
+      animation.scale_y    = 0.2; // we like y 0.5
       animation.offset_z   = 10;
       animation.offset_x   = 10*move.linear[0];
       float show1          = render_value(animation);
@@ -1164,12 +1165,69 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       animation.offset_z   = 300;
       float show3          = render_value(animation);
       
-      float radius = 11;   // radius of a radial brightness filter
+      float radius = 1;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
+      //pixel.red    = radial * (show1);  // was blank when removed
+      //pixel.red    = radial * (show1-show3);
+      pixel.green    = radial * (show1-show3) * 1.4;
+      pixel.red     = radial * (show1-show3) * 1.4;
+      //pixel.green  = radial * (show2-show1);
+      //pixel.blue   = radial * (show3-show2);
+     
+      pixel = rgb_sanity_check(pixel);
+      buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
+    }
+  }
+}
+
+void RGB_Blobs2a() { // nice one - supposed to be sparkles
+
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+
+  timings.master_speed = 0.02;    // master speed
+
+  timings.ratio[0] = 0.0025;           // speed ratios for the oscillators, higher values = faster transitions
+  timings.ratio[1] = 0.0027;
+  timings.ratio[2] = 0.0031;
+  timings.ratio[3] = 0.0033;           // speed ratios for the oscillators, higher values = faster transitions
+  timings.ratio[4] = 0.0036;
+  timings.ratio[5] = 0.0039;
+  
+  calculate_oscillators(timings); 
+
+  for (int x = 0; x < num_x; x++) {
+    for (int y = 0; y < num_y; y++) {
+      
+      animation.dist       = distance[x][y];
+      animation.angle      = polar_theta[x][y] + move.radial[0] + move.noise_angle[0]+ move.noise_angle[3] + move.noise_angle[1];
+      animation.z          = (sqrtf(animation.dist));// - 10 * move.linear[0];
+      animation.scale_x    = 0.1; // we like x 0.1
+      animation.scale_y    = 0.5; // we like y 0.5
+      animation.offset_z   = 10;
+      animation.offset_x   = 10*move.linear[0];
+      float show1          = render_value(animation);
+
+      animation.angle      = polar_theta[x][y] + move.radial[1]+ move.noise_angle[1]+ move.noise_angle[4] + move.noise_angle[2];
+      animation.offset_x   = 11*move.linear[1];
+      animation.offset_z   = 100;
+      float show2          = render_value(animation);
+
+      animation.angle      = polar_theta[x][y] + move.radial[2]+ move.noise_angle[2]+ move.noise_angle[5]+ move.noise_angle[3];
+      animation.offset_x   = 12*move.linear[2];
+      animation.offset_z   = 300;
+      float show3          = render_value(animation);
+      
+      float radius = 1;   // radius of a radial brightness filter
+      float radial = (radius-distance[x][y])/distance[x][y];
+
+      //pixel.red    = radial * (show1);  // was blank when removed
       pixel.red    = radial * (show1-show3);
-      pixel.green  = radial * (show2-show1);
-      pixel.blue   = radial * (show3-show2);
+      //pixel.green  = radial * (show2-show1);
+      //pixel.blue   = radial * (show3-show2);
+      //pixel.blue   = radial * (show1-show3); // got purble
+      pixel.blue   = radial * (-show1);
      
       pixel = rgb_sanity_check(pixel);
       buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
@@ -1351,7 +1409,7 @@ float colordodge(float &a, float&b) {
   return (a/(255.f-b)) * 255.f;
 }
 
-void Module_Experiment10(int inSpeed) { 
+void Module_Experiment10(float prox, float proxb) { 
   //float thisSpeed;
 
   //thisSpeed = (float)inSpeed / 10000;
@@ -1369,16 +1427,16 @@ void Module_Experiment10(int inSpeed) {
   //timings.master_speed = thisSpeed;    // master speed 0.031
 
   //  float w = 1;
-  long inputValue = map(inSpeed, 0, 200, 0, 255); // map the value to 0-255
+  long inputValue = map(prox, 1, 200, 1, 255); // map the value to 0-255
 
   float target = mapValue(inputValue);
   target = constrain(target, 0.15, 0.90);
   perma_w += (target - perma_w) * changeRate;
   float w = 0.031;
-  Serial.print("in: ");
-  Serial.print(inSpeed);
-  Serial.print(" perma_w: ");
-  Serial.println(perma_w);
+  //Serial.print("in: ");
+  //Serial.print(inSpeed);
+  //Serial.print(" perma_w: ");
+  //Serial.println(perma_w);
   //float w = 3 ;
 
   timings.ratio[0] = 0.01;           // speed ratios for the oscillators, higher values = faster transitions
@@ -1405,7 +1463,7 @@ void Module_Experiment10(int inSpeed) {
 
       //float s = 0.4; // scale
       float s = perma_w; // scale
-      float r = 1.5; // scroll speed
+      float r = constrain(mapValue(proxb), 0.15, 0.90); // scroll speed
       //float r = perma_w;
 
       animation.dist       = 3+distance[x][y] + 3*sinf(0.25*distance[x][y]-move.radial[3]);
@@ -1482,4 +1540,69 @@ void Module_Experiment10(int inSpeed) {
       */ 
     }
   }
+}
+
+void Lava2() {
+
+  get_ready(); 
+  rgb24 *buffer = backgroundLayer.backBuffer();                   // for time measurement in report_performance()
+
+  timings.master_speed = 0.0015;    // speed ratios for the oscillators
+  timings.ratio[0] = 4;         // higher values = faster transitions
+  timings.ratio[1] = 1;
+  timings.ratio[2] = 1;
+  timings.ratio[3] = 0.05;
+  timings.ratio[4] = 0.6;
+  timings.offset[0] = 0;
+  timings.offset[1] = 100;
+  timings.offset[2] = 200;
+  timings.offset[3] = 300;
+  timings.offset[4] = 400;
+  
+  calculate_oscillators(timings);     // get linear movers and oscillators going
+
+  for (int x = 0; x < num_x; x++) {
+    for (int y = 0; y < num_y; y++) {
+  
+      // describe and render animation layers
+      animation.dist       = distance[x][y] * 0.8;
+      animation.angle      = polar_theta[x][y];
+      animation.scale_x    = 0.15;// + (move.directional[0] + 2)/100;
+      animation.scale_y    = 0.12;// + (move.directional[1] + 2)/100;
+      animation.scale_z    = 0.01;
+      animation.offset_y   = -move.linear[0];
+      animation.offset_x   = 0;
+      animation.offset_z   = 0;
+      animation.z          = 30;
+      float show1          = render_value(animation);
+
+      animation.offset_y   = -move.linear[1];
+      animation.scale_x    = 0.15;// + (move.directional[0] + 2)/100;
+      animation.scale_y    = 0.12;// + (move.directional[1] + 2)/100;
+      animation.offset_x   = show1 / 100;
+      animation.offset_y   += show1/100;
+     
+      float show2          = render_value(animation);
+
+      animation.offset_y   = -move.linear[2];
+      animation.scale_x    = 0.15;// + (move.directional[0] + 2)/100;
+      animation.scale_y    = 0.12;// + (move.directional[1] + 2)/100;
+      animation.offset_x   = show2 / 100;
+      animation.offset_y   += show2/100;
+     
+      float show3         = render_value(animation);
+
+      // colormapping
+      float linear = (y)/(num_y-1.f);  // radial mask
+
+      pixel.red = linear*show2;
+      pixel.green = 0.1*linear*(show2-show3);
+      
+      pixel = rgb_sanity_check(pixel);
+
+      buffer[xy(x, y)] = (rgb24)CRGB(CRGB(pixel.red, pixel.green, pixel.blue));
+
+    }
+  }
+ 
 }
