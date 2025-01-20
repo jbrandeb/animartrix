@@ -420,7 +420,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   timings.offset[3] = 300;
   timings.offset[4] = 400;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -484,7 +484,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
   timings.offset[3] = 300;
   timings.offset[4] = 400;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -1172,6 +1172,7 @@ void RGB_Blobs2() { // nice one
       //pixel.red    = radial * (show1-show3);
       pixel.green    = radial * (show1-show3) * 1.4;
       pixel.red     = radial * (show1-show3) * 1.4;
+      pixel.blue = 0;
       //pixel.green  = radial * (show2-show1);
       //pixel.blue   = radial * (show3-show2);
      
@@ -1224,6 +1225,7 @@ void RGB_Blobs2a() { // nice one - supposed to be sparkles
 
       //pixel.red    = radial * (show1);  // was blank when removed
       pixel.red    = radial * (show1-show3);
+      pixel.green = 0;
       //pixel.green  = radial * (show2-show1);
       //pixel.blue   = radial * (show3-show2);
       //pixel.blue   = radial * (show1-show3); // got purble
@@ -1430,7 +1432,7 @@ void Module_Experiment10(float prox, float proxb) {
   long inputValue = map(prox, 1, 200, 1, 255); // map the value to 0-255
 
   float target = mapValue(inputValue);
-  target = constrain(target, 0.15, 0.90);
+  target = constrain(target, 0.30, 0.90);
   perma_w += (target - perma_w) * changeRate;
   float w = 0.031;
   //Serial.print("in: ");
@@ -1597,6 +1599,7 @@ void Lava2() {
 
       pixel.red = linear*show2;
       pixel.green = 0.1*linear*(show2-show3);
+      pixel.blue = 0;
       
       pixel = rgb_sanity_check(pixel);
 

@@ -176,7 +176,7 @@ void setup() {
 // Global variables (these stick around)
 int buttonState27 = LOW;
 int buttonState28 = LOW;
-int displayProgramNum = 10;  // start the display at this offset in the switch statement
+int displayProgramNum = 0;  // start the display at this offset in the switch statement
 elapsedMillis timeElapsed;
 
 // Use this function when using a temporary button
@@ -276,51 +276,43 @@ void loop() {
   switch (displayProgramNum) {
     case 0:
       //RGB_Blobs5(); break;
-      Module_Experiment10(proximity, proximityb); break;
+      Module_Experiment10(proximity, proximityb); break; //not great right now, needs scale
     case 1:
       RGB_Blobs2a(); break;
     case 2:
-      //RGB_Blobs3(); break;
-    case 3:
       RGB_Blobs2(); break;
-    case 4:
-     Lava2(); break;
-    case 5:
+    case 3:
       Polar_Waves(); break;
-    case 6:
+    case 4:
       Slow_Fade(); break;
-    case 7:
-      Zoom(); break;
-    case 8:
+    case 5:
       Hot_Blob(); break;
-    case 9:
-      Spiralus2(); break;
-    case 10:
+    //case 6:
+      //Spiralus2(); break; // less than ideal
+    case 6:
       Spiralus(); break;
-    case 11:
+    case 7:
       Yves(); break;
-    case 12:
-      //Scaledemo1(); break;
-    case 13:
+    case 8:
       Lava1(); break;
-    case 14:
-      Caleido3(); break;
-    case 15:
-      Caleido2(); break;
-    case 16:
+    case 9:
+      Caleido3(); break; // slow the f*** down
+    case 10:
+      Caleido2(); break; // spins too quick
+    case 11:
       Caleido1(); break;
-    case 17:
+    case 12:
       Distance_Experiment(); break;
-    case 18:
+    case 13:
       Center_Field(); break;
-    case 19:
+    case 14:
       Waves(); break;
-    case 20:
-      Chasing_Spirals(); break;
-    case 21:
-      Rotating_Blob(); break;
-    case 22:
-      Rings(); break;
+    case 15:
+      Chasing_Spirals(); break; // needs to be brighter
+    case 16:
+      Rotating_Blob(); break; // too dark but worth saving
+    case 17:
+      Rings(); break; // good
     default:
       break;
   } // end switch statement
