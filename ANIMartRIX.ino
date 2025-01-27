@@ -48,7 +48,8 @@ const uint8_t  kBackgroundLayerOptions = (SM_BACKGROUND_OPTIONS_NONE);
 SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth, kDmaBufferRows, kPanelType, kMatrixOptions);
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(backgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kBackgroundLayerOptions);
 
-CRGB leds[num_x * num_y];               // framebuffer
+#define NUM_LEDS num_x * num_y
+//CRGB leds[NUM_LEDS];                    // framebuffer
 
 float polar_theta[num_x][num_y];        // look-up table for polar angles
 float distance[num_x][num_y];           // look-up table for polar distances
@@ -138,6 +139,7 @@ void setup() {
 int buttonState27 = LOW;
 int displayProgramNum = 0;  // start the display at this offset in the switch statement
 elapsedMillis timeElapsed;
+uint8_t cur_brightness = brightness;
 
 // Use this function when using a temporary button
 int handleTempButton(int button)
@@ -174,11 +176,62 @@ int handleClickButton(int button, int *buttonState)
 }
 
 float proximity = 0, proximityb = 0;
+// define an array of functions to call
+static void (*animationFunctions[])() = {
+  //Spiralus2,
+  //Polar_Waves,
+  //RGB_Blobs5,
+  Module_Experiment10, // 0
+  RGB_Blobs2a,
+  RGB_Blobs2,
+  Slow_Fade,
+  Hot_Blob,
+  Spiralus, // 5
+  Yves,
+  Lava1,
+  Caleido3,
+  Caleido2,
+  Caleido1, // 10
+  Distance_Experiment,
+  Center_Field,
+  Waves,
+  Chasing_Spirals,
+  Rotating_Blob, // 15
+  Rings
+};
+
+#define ARRAY_SIZE(array) (sizeof((array))/sizeof((array[0])))
+
+void fadeOutScreen(int steps, int delayTime) {
+  get_ready();
+
+  for (int step = 0; step < steps; step++) {
+    rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+
+    for (int y = 0; y < kMatrixHeight; y++) {
+      for (int x = 0; x < kMatrixWidth; x++) {
+        int index = y * kMatrixWidth + x;
+        buffer[index].red = buffer[index].red * (steps - step) / steps;
+        buffer[index].green = buffer[index].green * (steps - step) / steps;
+        buffer[index].blue = buffer[index].blue * (steps - step) / steps;
+      }
+    }
+    show_frame();
+    delay(delayTime);
+  }
+}
+
+void incDisplayProgramNum() {
+  if (++displayProgramNum > ARRAY_SIZE(animationFunctions) - 1) {
+    displayProgramNum = 0;
+  }
+}
 
 void loop() {
 
   int curButtonState = digitalRead(27);
   char incomingData = '0';
+  bool switchedProg = false;
 
 
   if (Serial.available() > 0) { // Check if there's any data available to read
@@ -187,23 +240,32 @@ void loop() {
     Serial.println(incomingData); // Print the received byte
   }
 
-  if ((incomingData != '0') ||
-  // Jesse's buttons are Temporary High/steady Low
-      (handleTempButton(curButtonState))) {
-  //(handleClickButton(curButtonState)) {
-  //if (handleTempButton(curButtonState)) {
-  // Comment out above and uncomment below for guitar button
-  // if (handleClickButton(curButtonState)) {
+  /// NOTE NOTE NOTE - this cycles the programs every five seconds, comment out to stop
+  EVERY_N_MILLIS(5000) incomingData = '\n';
 
-    // loop over all the programs, if the number included below, in the switch, changes then update this number
-    if (++displayProgramNum > 22) {
-      displayProgramNum = 0;
-    }
+  if ((incomingData != '0') ||
+      // Jesse's buttons are Temporary High/steady Low
+      (handleTempButton(curButtonState))) {
+    //(handleClickButton(curButtonState)) {
+    //if (handleTempButton(curButtonState)) {
+    // Comment out above and uncomment below for guitar button
+    // if (handleClickButton(curButtonState)) {
+
+    // loop over all the programs in the animationFunctions array, incrementing the displayProgramNum
+    // variable each time, and then resetting it to 0 if it goes over the number of programs in the array
+    incDisplayProgramNum();
+
     Serial.print("ProgNum: ");
     Serial.println(displayProgramNum, DEC);
 
-    backgroundLayer.fillScreen({0,0,0});
+    // since we are switching programs, fade the screen to black
+    fadeOutScreen(50, 10);
 
+    // reset the animation struct
+    animation = render_parameters();
+    timings = oscillators();
+    move = modulators();
+    switchedProg = true;
   }
 
     static float smoothingFactor = 0.04; // Adjust this value between 0.0 and 1.0 for the desired smoothing effect (0.1 is an example value)
@@ -219,52 +281,20 @@ void loop() {
     proximityb = (smoothingFactor * ((float)vcnl4200b.readProxData())) + ((1 - smoothingFactor) * proximityb);
 #endif
 
-  // press button to advance
-  switch (displayProgramNum) {
-    case 0:
-      //RGB_Blobs5(); break;
-      Module_Experiment10(proximity, proximityb); break; //not great right now, needs scale
-    case 1:
-      RGB_Blobs2a(); break;
-    case 2:
-      RGB_Blobs2(); break;
-    case 3:
-      Polar_Waves(); break;
-    case 4:
-      Slow_Fade(); break;
-    case 5:
-      Hot_Blob(); break;
-    //case 6:
-      //Spiralus2(); break; // less than ideal
-    case 6:
-      Spiralus(); break;
-    case 7:
-      Yves(); break;
-    case 8:
-      Lava1(); break;
-    case 9:
-      Caleido3(); break; // slow the f*** down
-    case 10:
-      Caleido2(); break; // spins too quick
-    case 11:
-      Caleido1(); break;
-    case 12:
-      Distance_Experiment(); break;
-    case 13:
-      Center_Field(); break;
-    case 14:
-      Waves(); break;
-    case 15:
-      Chasing_Spirals(); break; // needs to be brighter
-    case 16:
-      Rotating_Blob(); break; // too dark but worth saving
-    case 17:
-      Rings(); break; // good
-    default:
-      break;
-  } // end switch statement
+ 
+  // call the function indicated by the displayProgramNum variable
+  animationFunctions[displayProgramNum]();
 
   // call the matrix specific draw function
+  if (switchedProg)
+    cur_brightness = 0;
+
+  matrix.setBrightness(cur_brightness);
+
   show_frame();
+
+  // increase brightness to max each loop the program runs further after switching
+  if (cur_brightness != brightness)
+    cur_brightness++;
 } 
 

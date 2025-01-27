@@ -4,8 +4,8 @@ void Rotating_Blob() {
   get_ready();
   rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.01;    // speed ratios for the oscillators
-  timings.ratio[0] = 0.1;         // higher values = faster transitions
+  timings.master_speed = 0.003;    // speed ratios for the oscillators
+  timings.ratio[0] = 0.1;          // higher values = faster transitions
   timings.ratio[1] = 0.03;
   timings.ratio[2] = 0.03;
   timings.ratio[3] = 0.03;
@@ -48,9 +48,9 @@ void Rotating_Blob() {
       float show4          = render_value(animation);
 
       // colormapping
-      pixel.red   = (show2+show4)/2;
+      pixel.red   = (show2+show4)/4;
       pixel.green = show3 / 6;
-      pixel.blue  = 0;
+      pixel.blue  = (show2+show4)/2;
 
       pixel = rgb_sanity_check(pixel);
 
@@ -105,7 +105,7 @@ void Chasing_Spirals() {
       float show3          = render_value(animation);
 
       // colormapping
-      float radius = 50;
+      float radius = 200;
       float radial_filter = (radius - distance[x][y]) / radius;
 
       pixel.red   = 3*show1 * radial_filter;
@@ -283,10 +283,10 @@ void Center_Field() {
 
 void Distance_Experiment() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.01;    // speed ratios for the oscillators
+  timings.master_speed = 0.001;    // speed ratios for the oscillators
   timings.ratio[0] = 0.2;         // higher values = faster transitions
   timings.ratio[1] = 0.13;
   timings.ratio[2] = 0.012;
@@ -301,7 +301,7 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
     for (int y = 0; y < num_y; y++) {
   
       // describe and render animation layers
-      animation.dist       = powf(distance[x][y], 0.5);
+      animation.dist       = powf(distance[x][y], 0.8);
       animation.angle      = polar_theta[x][y] + move.radial[0];
       animation.scale_x    = 0.07;
       animation.scale_y    = 0.07;
@@ -339,10 +339,10 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
 void Caleido1() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.003;    // speed ratios for the oscillators
+  timings.master_speed = 0.0004;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
   timings.ratio[1] = 0.03;
   timings.ratio[2] = 0.04;
@@ -405,10 +405,10 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
 void Caleido2() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.002;    // speed ratios for the oscillators
+  timings.master_speed = 0.0002;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
   timings.ratio[1] = 0.03;
   timings.ratio[2] = 0.04;
@@ -457,7 +457,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       
       // colormapping
       pixel.red   = show1;
-      pixel.green = show3 * distance[x][y] / 10;
+      //pixel.green = show3 * distance[x][y] / 10;
+      pixel.green = 0;
       pixel.blue  = (show2 + show4) / 2;
 
       pixel = rgb_sanity_check(pixel);
@@ -469,10 +470,10 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
 void Caleido3() {
 
-get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  get_ready();
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
-  timings.master_speed = 0.001;    // speed ratios for the oscillators
+  timings.master_speed = 0.0003;    // speed ratios for the oscillators
   timings.ratio[0] = 0.02;         // higher values = faster transitions
   timings.ratio[1] = 0.03;
   timings.ratio[2] = 0.04;
@@ -596,6 +597,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 
       pixel.red = linear*show2;
       //pixel.green = 0.1*linear*(show2-show3);
+      pixel.green = 0;
+      pixel.blue = 0;
       
       pixel = rgb_sanity_check(pixel);
 
@@ -909,6 +912,7 @@ void Hot_Blob() { // nice one
       
       pixel.red   = radial  * show2;
       pixel.green   = linear * radial* 0.3* (show2-show4);
+      pixel.blue = 0;
       
       
       pixel = rgb_sanity_check(pixel);
@@ -959,8 +963,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
       
       pixel.red   = show1*linear;
       pixel.green   = 0;
-      
-      
+      pixel.blue    = 0;
+            
       pixel = rgb_sanity_check(pixel);
       buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
@@ -1030,7 +1034,7 @@ void Polar_Waves() { // nice one
 
   timings.master_speed = 0.5;    // master speed
 
-  timings.ratio[0] = 0.0025;           // speed ratios for the oscillators, higher values = faster transitions
+  timings.ratio[0] = 0.0005;           // speed ratios for the oscillators, higher values = faster transitions
   timings.ratio[1] = 0.0027;
   timings.ratio[2] = 0.0031;
   
@@ -1061,12 +1065,13 @@ void Polar_Waves() { // nice one
       float radius = 150;   // radius of a radial brightness filter
       float radial = (radius-distance[x][y])/distance[x][y];
 
-      pixel.red    = radial * show1;
-      pixel.green  = radial * show2;
-      pixel.blue   = radial * show3;
-      
-      
-      pixel = rgb_sanity_check(pixel);
+      #define INTENSITY 0.75
+      pixel.red    = radial * (show1 - show3) * INTENSITY;
+      pixel.blue  = radial * (show2) * INTENSITY;
+      //pixel.blue   = radial * show3 * 0.2;
+      pixel.green = 0;
+            
+
       buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
     }
   }
@@ -1075,7 +1080,7 @@ void Polar_Waves() { // nice one
 void RGB_Blobs() { // nice one
 
   get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   timings.master_speed = 0.2;    // master speed
 
@@ -1411,12 +1416,13 @@ float colordodge(float &a, float&b) {
   return (a/(255.f-b)) * 255.f;
 }
 
-void Module_Experiment10(float prox, float proxb) { 
+void Module_Experiment10() { 
   //float thisSpeed;
 
   //thisSpeed = (float)inSpeed / 10000;
   //thisSpeed = max(thisSpeed, 0.01);
-
+  float prox = proximity;
+  float proxb = proximityb;
 
   get_ready();
 
