@@ -107,8 +107,6 @@ Adafruit_VCNL4200 vcnl4200b;
 
 //******************************************************************************************************************
 
-// Create a new TwoWire instance for the second sensor
-//TwoWire Wire2 = TwoWire(1);
 
 void setup() {
   
@@ -121,55 +119,11 @@ void setup() {
   Serial.begin(115200);                 // check serial monitor for current fps count
 
 
-// comment out the next line if you're not on JESSE_SETUP
-#define JESSE_SETUP
-
-#ifndef JESSE_SETUP
-
   // Button setup
   pinMode(27, INPUT_PULLUP);
-  pinMode(28, INPUT_PULLUP);
 
+  // Proximity Sensor setup
 
-  // Initialize I2C communication
-  Wire.begin();
-
-  // Initialize the second sensor on pins 16 and 17
-  Wire1.begin();
-  //Wire1.setSCL(16);
-  //Wire1.setSDA(17);
-
-
-  if (!vcnl4200.begin()) {
-    Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
-    while (1) {
-      delay(10);
-    }
-  }
-  Serial.println("VCNL4200 found!");
-  
-  // second i2c bus
-  if (!vcnl4200b.begin(VCNL4200_I2CADDR_DEFAULT, &Wire1)) {
-    Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
-    while (1) {
-      delay(10);
-    }
-  }
-  Serial.println("VCNL4200B found!");
-
-
-  vcnl4200.setALSshutdown(true);
-  vcnl4200.setProxShutdown(false);
-  vcnl4200.setProxHD(false);
-  vcnl4200.setProxLEDCurrent(VCNL4200_LED_I_200MA);
-  vcnl4200.setProxIntegrationTime(VCNL4200_PS_IT_8T);
-
-  vcnl4200b.setALSshutdown(true);
-  vcnl4200b.setProxShutdown(false);
-  vcnl4200b.setProxHD(false);
-  vcnl4200b.setProxLEDCurrent(VCNL4200_LED_I_200MA);
-  vcnl4200b.setProxIntegrationTime(VCNL4200_PS_IT_8T);
-#endif // JESSE_SETUP
  
   render_polar_lookup_table((num_x / 2) - 0.5, (num_y / 2) - 0.5);          // precalculate all polar coordinates 
                                                                             // polar origin is set to matrix centre
@@ -182,7 +136,6 @@ void setup() {
 
 // Global variables (these stick around)
 int buttonState27 = LOW;
-int buttonState28 = LOW;
 int displayProgramNum = 0;  // start the display at this offset in the switch statement
 elapsedMillis timeElapsed;
 
@@ -224,10 +177,7 @@ float proximity = 0, proximityb = 0;
 
 void loop() {
 
-#ifndef JESSE_SETUP
   int curButtonState = digitalRead(27);
-  int cur28 = digitalRead(28);
-#endif
   char incomingData = '0';
 
 
@@ -238,16 +188,9 @@ void loop() {
   }
 
   if ((incomingData != '0') ||
-#ifdef JESSE_SETUP      
-      // Jesse's buttons are Temporary High/steady Low
-      //(handleTempButton(curButtonState))) {
-#else 
-      0 ) {
-#endif
-#ifndef JESSE_SETUP      
-      (handleClickButton(curButtonState, &buttonState27)) ||
-      (handleClickButton(cur28, &buttonState28))) {
-#endif
+  // Jesse's buttons are Temporary High/steady Low
+      (handleTempButton(curButtonState))) {
+  //(handleClickButton(curButtonState)) {
   //if (handleTempButton(curButtonState)) {
   // Comment out above and uncomment below for guitar button
   // if (handleClickButton(curButtonState)) {
@@ -263,29 +206,18 @@ void loop() {
 
   }
 
-  //static float smoothingFactor = 0.02; // 02 seemed like too slow to respond
+    static float smoothingFactor = 0.04; // Adjust this value between 0.0 and 1.0 for the desired smoothing effect (0.1 is an example value)
 
-  static float smoothingFactor = 0.04; // Adjust this value between 0.0 and 1.0 for the desired smoothing effect (0.1 is an example value)
-
-  // proximity read
-  //proximity = vcnl4200.readProxData();
-  proximity = (smoothingFactor *  ((float)vcnl4200.readProxData())) + ((1 - smoothingFactor) * proximity);
-  //Serial.print("Prox Data: ");
-  //Serial.println(proximity);
-
- // proximity read
-  //proximityb = vcnl4200b.readProxData();
-
-  // Apply the low-pass filter formula
-  proximityb = (smoothingFactor * ((float)vcnl4200b.readProxData())) + ((1 - smoothingFactor) * proximityb);
-
-//Serial.print("Prox Data B: ");
-  //Serial.println(proximityb);
-
-  //animation.scale_x = (float)proximityb / 10000;
-  //animation.scale_y = (float)proximityb / 10000;
-  //animation.scale_z = (float)proximityb / 10000;
-  
+    // comment this next line out if it's not Jesse's setup
+#define JESSE
+#ifdef JESSE
+    // override the input variables cause I don't have them
+    proximity = 1;
+    proximityb = 1;
+#else
+    proximity = (smoothingFactor *  ((float)vcnl4200.readProxData())) + ((1 - smoothingFactor) * proximity);
+    proximityb = (smoothingFactor * ((float)vcnl4200b.readProxData())) + ((1 - smoothingFactor) * proximityb);
+#endif
 
   // press button to advance
   switch (displayProgramNum) {

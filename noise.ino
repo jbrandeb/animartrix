@@ -61,3 +61,4 @@ return lerp(w,lerp(v,lerp(u, grad(P(AA  ), x, y, z),    /* AND ADD */
               lerp(u, grad(P(AB+1), x, y-1, z-1),
                    grad(P(BB+1), x-1, y-1, z-1))));
 }
+
