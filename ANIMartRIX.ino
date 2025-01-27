@@ -121,9 +121,15 @@ void setup() {
   Serial.begin(115200);                 // check serial monitor for current fps count
 
 
+// comment out the next line if you're not on JESSE_SETUP
+#define JESSE_SETUP
+
+#ifndef JESSE_SETUP
+
   // Button setup
   pinMode(27, INPUT_PULLUP);
   pinMode(28, INPUT_PULLUP);
+
 
   // Initialize I2C communication
   Wire.begin();
@@ -132,6 +138,7 @@ void setup() {
   Wire1.begin();
   //Wire1.setSCL(16);
   //Wire1.setSDA(17);
+
 
   if (!vcnl4200.begin()) {
     Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
@@ -162,7 +169,7 @@ void setup() {
   vcnl4200b.setProxHD(false);
   vcnl4200b.setProxLEDCurrent(VCNL4200_LED_I_200MA);
   vcnl4200b.setProxIntegrationTime(VCNL4200_PS_IT_8T);
-
+#endif // JESSE_SETUP
  
   render_polar_lookup_table((num_x / 2) - 0.5, (num_y / 2) - 0.5);          // precalculate all polar coordinates 
                                                                             // polar origin is set to matrix centre
@@ -217,8 +224,10 @@ float proximity = 0, proximityb = 0;
 
 void loop() {
 
+#ifndef JESSE_SETUP
   int curButtonState = digitalRead(27);
   int cur28 = digitalRead(28);
+#endif
   char incomingData = '0';
 
 
@@ -229,10 +238,16 @@ void loop() {
   }
 
   if ((incomingData != '0') ||
-  // Jesse's buttons are Temporary High/steady Low
+#ifdef JESSE_SETUP      
+      // Jesse's buttons are Temporary High/steady Low
       //(handleTempButton(curButtonState))) {
+#else 
+      0 ) {
+#endif
+#ifndef JESSE_SETUP      
       (handleClickButton(curButtonState, &buttonState27)) ||
       (handleClickButton(cur28, &buttonState28))) {
+#endif
   //if (handleTempButton(curButtonState)) {
   // Comment out above and uncomment below for guitar button
   // if (handleClickButton(curButtonState)) {
