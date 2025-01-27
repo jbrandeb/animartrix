@@ -49,7 +49,6 @@ SMARTMATRIX_ALLOCATE_BUFFERS(matrix, kMatrixWidth, kMatrixHeight, kRefreshDepth,
 SMARTMATRIX_ALLOCATE_BACKGROUND_LAYER(backgroundLayer, kMatrixWidth, kMatrixHeight, COLOR_DEPTH, kBackgroundLayerOptions);
 
 #define NUM_LEDS num_x * num_y
-//CRGB leds[NUM_LEDS];                    // framebuffer
 
 float polar_theta[num_x][num_y];        // look-up table for polar angles
 float distance[num_x][num_y];           // look-up table for polar distances
@@ -119,11 +118,52 @@ void setup() {
 
   Serial.begin(115200);                 // check serial monitor for current fps count
 
+  // set up the onboard LED
+  pinMode(13, OUTPUT);
 
   // Button setup
   pinMode(27, INPUT_PULLUP);
+  pinMode(28, INPUT_PULLUP);
 
-  // Proximity Sensor setup
+  // Initialize I2C communication
+  Wire.begin();
+
+  // Initialize the second sensor (it defaults to) pins 16 and 17
+  Wire1.begin();
+
+  if (!vcnl4200.begin()) {
+    Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
+    while (1) {
+      // flash the LED to show failure (slow flash for sensor A)
+      digitalToggle(13);
+      delay(500);
+    }
+  }
+  Serial.println("VCNL4200 found!");
+  
+  // second i2c bus
+  if (!vcnl4200b.begin(VCNL4200_I2CADDR_DEFAULT, &Wire1)) {
+    Serial.println("Could not find a valid VCNL4200 sensor, check wiring!");
+    while (1) {
+      // flash the LED to show failure (fast flash for sensor B)
+      digitalToggle(13);
+      delay(200);
+    }
+  }
+  Serial.println("VCNL4200B found!");
+
+
+  vcnl4200.setALSshutdown(true);
+  vcnl4200.setProxShutdown(false);
+  vcnl4200.setProxHD(false);
+  vcnl4200.setProxLEDCurrent(VCNL4200_LED_I_200MA);
+  vcnl4200.setProxIntegrationTime(VCNL4200_PS_IT_8T);
+
+  vcnl4200b.setALSshutdown(true);
+  vcnl4200b.setProxShutdown(false);
+  vcnl4200b.setProxHD(false);
+  vcnl4200b.setProxLEDCurrent(VCNL4200_LED_I_200MA);
+  vcnl4200b.setProxIntegrationTime(VCNL4200_PS_IT_8T);
 
  
   render_polar_lookup_table((num_x / 2) - 0.5, (num_y / 2) - 0.5);          // precalculate all polar coordinates 
@@ -137,6 +177,7 @@ void setup() {
 
 // Global variables (these stick around)
 int buttonState27 = LOW;
+int buttonState28 = LOW;
 int displayProgramNum = 0;  // start the display at this offset in the switch statement
 elapsedMillis timeElapsed;
 uint8_t cur_brightness = brightness;
@@ -230,6 +271,7 @@ void incDisplayProgramNum() {
 void loop() {
 
   int curButtonState = digitalRead(27);
+  int cur28 = digitalRead(28);
   char incomingData = '0';
   bool switchedProg = false;
 
@@ -240,60 +282,69 @@ void loop() {
     Serial.println(incomingData); // Print the received byte
   }
 
-  /// NOTE NOTE NOTE - this cycles the programs every five seconds, comment out to stop
-  EVERY_N_MILLIS(5000) incomingData = '\n';
+  /// NOTE NOTE NOTE - this cycles the programs every ten seconds, comment out to stop
+  //EVERY_N_MILLIS(10000) incomingData = '\n';
 
   if ((incomingData != '0') ||
       // Jesse's buttons are Temporary High/steady Low
-      (handleTempButton(curButtonState))) {
-    //(handleClickButton(curButtonState)) {
-    //if (handleTempButton(curButtonState)) {
-    // Comment out above and uncomment below for guitar button
-    // if (handleClickButton(curButtonState)) {
+      //(handleTempButton(curButtonState))) {
+      (handleClickButton(curButtonState, &buttonState27)) ||
+      (handleClickButton(cur28, &buttonState28))) {
+  //if (handleTempButton(curButtonState)) {
+  // Comment out above and uncomment below for guitar button
+  // if (handleClickButton(curButtonState)) {
 
-    // loop over all the programs in the animationFunctions array, incrementing the displayProgramNum
-    // variable each time, and then resetting it to 0 if it goes over the number of programs in the array
+    // loop over all the programs, if the number included below, in the switch,
+    // changes then update this number
     incDisplayProgramNum();
-
     Serial.print("ProgNum: ");
     Serial.println(displayProgramNum, DEC);
 
     // since we are switching programs, fade the screen to black
     fadeOutScreen(50, 10);
 
-    // reset the animation struct
+    // reset the program parameters struct so they don't influence each other
     animation = render_parameters();
     timings = oscillators();
     move = modulators();
+    // note we switched so we can fade in later
     switchedProg = true;
   }
 
-    static float smoothingFactor = 0.04; // Adjust this value between 0.0 and 1.0 for the desired smoothing effect (0.1 is an example value)
+  //static float smoothingFactor = 0.02; // 02 seemed like too slow to respond
 
-    // comment this next line out if it's not Jesse's setup
-#define JESSE
-#ifdef JESSE
-    // override the input variables cause I don't have them
-    proximity = 1;
-    proximityb = 1;
-#else
-    proximity = (smoothingFactor *  ((float)vcnl4200.readProxData())) + ((1 - smoothingFactor) * proximity);
-    proximityb = (smoothingFactor * ((float)vcnl4200b.readProxData())) + ((1 - smoothingFactor) * proximityb);
-#endif
+  static float smoothingFactor = 0.04; // Adjust this value between 0.0 and 1.0
+                                       // for the desired smoothing effect (0.1
+                                       // is an example value)
 
+  // proximity read
+  //proximity = vcnl4200.readProxData();
+  proximity = (smoothingFactor *  ((float)vcnl4200.readProxData())) + ((1 - smoothingFactor) * proximity);
+  //Serial.print("Prox Data: ");
+  //Serial.println(proximity);
+
+ // proximity read
+  //proximityb = vcnl4200b.readProxData();
+
+  // Apply the low-pass filter formula
+  proximityb = (smoothingFactor * ((float)vcnl4200b.readProxData())) + ((1 - smoothingFactor) * proximityb);
+
+//Serial.print("Prox Data B: ");
+  //Serial.println(proximityb);
  
   // call the function indicated by the displayProgramNum variable
   animationFunctions[displayProgramNum]();
 
-  // call the matrix specific draw function
+  // implement fade in logic if we're switching, using brightness
   if (switchedProg)
     cur_brightness = 0;
 
   matrix.setBrightness(cur_brightness);
 
+  // call the matrix specific draw function
   show_frame();
 
-  // increase brightness to max each loop the program runs further after switching
+  // increase brightness to max each loop the program runs after switching
   if (cur_brightness != brightness)
     cur_brightness++;
 } 

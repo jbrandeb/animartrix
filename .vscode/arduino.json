@@ -1,0 +1,7 @@
+{
+    "configuration": "usb=serial,speed=600,opt=o3lto,keys=en-us",
+    "board": "teensy:avr:teensy41",
+    "port": "COM3",
+    "sketch": "ANIMartRIX.ino",
+    "output": "build"
+}
