@@ -225,12 +225,12 @@ static void (*animationFunctions[])() = {
   Module_Experiment10, // 0
   RGB_Blobs2a,
   RGB_Blobs2,
-  Slow_Fade,
+  Slow_Fade, // 3
   Hot_Blob,
   Spiralus, // 5
   Yves,
   Lava1,
-  Caleido3,
+  Caleido3, // 8
   Caleido2,
   Caleido1, // 10
   Distance_Experiment,
@@ -275,7 +275,11 @@ void loop() {
   char incomingData = '0';
   bool switchedProg = false;
 
-
+  if (millis() > 1800000) {
+    systick_millis_count = 10;
+    Serial.println("reset millis to 0"); 
+  }
+    
   if (Serial.available() > 0) { // Check if there's any data available to read
     incomingData = Serial.read(); // Read the incoming byte
     Serial.print("Received: "); // Print received message

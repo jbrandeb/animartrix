@@ -15,7 +15,7 @@ void Rotating_Blob() {
   timings.offset[2] = 20;
   timings.offset[3] = 30;
   
-  calculate_oscillators(timings);     // get linear movers and oscillators going
+  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -48,9 +48,10 @@ void Rotating_Blob() {
       float show4          = render_value(animation);
 
       // colormapping
-      pixel.red   = (show2+show4)/4;
-      pixel.green = show3 / 6;
-      pixel.blue  = (show2+show4)/2;
+      pixel.red   = (show2+show4)/2;
+      //pixel.green = show3 / 3;
+      pixel.green = 0;
+      pixel.blue  = (show2+show4)/1;
 
       pixel = rgb_sanity_check(pixel);
 
@@ -485,7 +486,7 @@ void Caleido3() {
   timings.offset[3] = 300;
   timings.offset[4] = 400;
   
-  calculate_oscillators_slow(timings);     // get linear movers and oscillators going
+  calculate_oscillators_sloth(timings);     // get linear movers and oscillators going
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -730,9 +731,9 @@ void Yves() {
       
      
       pixel.green   = show3 * 1.4;
-      pixel.red     = show3 * map(proximityb * 8, 100, 12000, 0.4, 6.0);
+      pixel.red     = show3 * map(proximityb * 30, 100, 12000, 0.4, 6.0);
       //pixel.red = show3*show4/255;
-      pixel.blue  = show4/3 * 1.5 * map(proximity * 10, 100, 12000, 0.8, 6.0);;
+      pixel.blue  = show4/3 * 1.5 * map(proximity * 50, 100, 12000, 0.8, 6.0);;
       
       pixel = rgb_sanity_check(pixel);
       buffer[xy(x, y)] = CRGB(pixel.red, pixel.green, pixel.blue);
@@ -977,11 +978,11 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
 void Slow_Fade() { // nice one
 
   get_ready();
-rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
+  rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measurement in report_performance()
 
   run_default_oscillators();
   timings.master_speed = 0.00005;
-  calculate_oscillators(timings); 
+  calculate_oscillators_slow(timings); 
 
   for (int x = 0; x < num_x; x++) {
     for (int y = 0; y < num_y; y++) {
@@ -1017,7 +1018,8 @@ rgb24 *buffer = backgroundLayer.backBuffer();                  // for time measu
     
       
       pixel.red    = radial * show1;
-      pixel.green  = radial * (show1 - show2) / 6;
+      pixel.green    = radial * show1;
+     // pixel.green  = radial * (show1 - show2) / 6;
       pixel.blue   = radial * (show1 - show3) / 5;
       
       
